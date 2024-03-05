@@ -1,0 +1,12 @@
+{
+    "sqltools.useNodeRuntime": true,
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "teste",
+            "database": "${workspaceFolder:gin-auth-jwt}/test.db",
+            "group": "tes"
+        }
+    ]
+}
