@@ -2,7 +2,7 @@ package userhandlers
 
 import "github.com/sandronister/jwt-auth/internal/usecase/userusecase"
 
-type RegisterInput struct {
+type LoginInput struct {
 	Username *string `json:"username" binding:"required"`
 	Password *string `json:"password" binding:"required"`
 }

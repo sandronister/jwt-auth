@@ -1,20 +1,28 @@
 package userusecase
 
 import (
-	"github.com/sandronister/jwt-auth/internal/entity"
+	"errors"
+
+	"github.com/sandronister/jwt-auth/internal/tools/tokenservice"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (u *User) Login(username, password string) (entity.User, error) {
+func (u *User) Login(username, password string) (string, error) {
 	user, err := u.repository.GetUserByUsername(username)
 	if err != nil {
-		return entity.User{}, err
+		return "", err
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
-		return entity.User{}, err
+		return "", errors.New("not authorized")
 	}
 
-	return user, nil
+	token, err := tokenservice.GenerateToken(user.ID)
+
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }

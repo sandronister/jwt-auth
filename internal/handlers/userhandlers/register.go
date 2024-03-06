@@ -3,7 +3,7 @@ package userhandlers
 import "github.com/gin-gonic/gin"
 
 func (h *Handler) Register(c *gin.Context) {
-	var input RegisterInput
+	var input LoginInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 

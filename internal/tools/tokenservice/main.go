@@ -1,4 +1,4 @@
-package token
+package tokenservice
 
 import (
 	"errors"
@@ -11,9 +11,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GenerateToken(user_id uint) (string, error) {
+func GenerateToken(user_id int) (string, error) {
 
-	token_lifespan, err := strconv.Atoi(os.Getenv("TOKEN_LIFESPAN"))
+	token_lifespan, err := strconv.Atoi(os.Getenv("TOKEN_HOUR_LIFESPAN"))
 
 	if err != nil {
 		return "", err

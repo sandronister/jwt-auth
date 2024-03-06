@@ -21,6 +21,6 @@ func (u *User) CreateUser(username, password string) error {
 
 func (u *User) GetUserByUsername(username string) (entity.User, error) {
 	var user entity.User
-	err := u.connection.QueryRow("SELECT * FROM users WHERE username = ?", username).Scan(&user)
+	err := u.connection.QueryRow("SELECT id,username,password FROM users WHERE username = ?", username).Scan(&user.ID, &user.Username, &user.Password)
 	return user, err
 }

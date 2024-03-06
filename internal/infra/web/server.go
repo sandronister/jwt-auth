@@ -21,6 +21,7 @@ func (s *WebServer) AddRegisterHandler(handler *userhandlers.Handler) {
 	public := s.router.Group("/api")
 
 	public.POST("/register", handler.Register)
+	public.POST("/login", handler.Login)
 }
 
 func (s *WebServer) Start() error {
