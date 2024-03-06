@@ -2,7 +2,7 @@ package web
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/sandronister/jwt-auth/internal/handlers"
+	"github.com/sandronister/jwt-auth/internal/handlers/userhandlers"
 )
 
 type WebServer struct {
@@ -17,7 +17,7 @@ func NewWebServer(webPort string) *WebServer {
 	}
 }
 
-func (s *WebServer) AddRegisterHandler(handler *handlers.UserHandler) {
+func (s *WebServer) AddRegisterHandler(handler *userhandlers.Handler) {
 	public := s.router.Group("/api")
 
 	public.POST("/register", handler.Register)
