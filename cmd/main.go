@@ -2,14 +2,23 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
+	"os"
 
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/sandronister/jwt-auth/config"
 	"github.com/sandronister/jwt-auth/internal/di"
 	"github.com/sandronister/jwt-auth/internal/infra/web"
 )
 
 func main() {
-	server := web.NewWebServer(":8080")
+	err := config.LoadConfig()
+
+	if err != nil {
+		panic(err)
+	}
+
+	server := web.NewWebServer(fmt.Sprintf(":%s", os.Getenv("PORT")))
 
 	db, err := sql.Open("sqlite3", "./test.db")
 
