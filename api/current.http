@@ -1,0 +1,4 @@
+GET http://localhost:3000/api/current
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MDk3Mzk3NzIsInVzZXJfaWQiOjF9.GbICGwByZDjV4DfyRl-PFt-ofIAbtBas1JCWGd0J55g
+```

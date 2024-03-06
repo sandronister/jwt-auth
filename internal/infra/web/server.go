@@ -3,6 +3,7 @@ package web
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/sandronister/jwt-auth/internal/handlers/userhandlers"
+	"github.com/sandronister/jwt-auth/internal/tools/middleware"
 )
 
 type WebServer struct {
@@ -19,9 +20,13 @@ func NewWebServer(webPort string) *WebServer {
 
 func (s *WebServer) AddRegisterHandler(handler *userhandlers.Handler) {
 	public := s.router.Group("/api")
+	protected := s.router.Group("/api")
 
 	public.POST("/register", handler.Register)
 	public.POST("/login", handler.Login)
+
+	protected.Use(middleware.JwtAuthMiddleware())
+	protected.GET("/current", handler.Current)
 }
 
 func (s *WebServer) Start() error {

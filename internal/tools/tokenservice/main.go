@@ -2,6 +2,7 @@ package tokenservice
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -50,4 +51,23 @@ func TokenValid(c *gin.Context) error {
 	}
 
 	return nil
+}
+
+func ExtractTokenMetadata(c *gin.Context) (int, error) {
+	tokenString := ExtractToken(c)
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		return []byte(os.Getenv("JWT_SECRET")), nil
+	})
+	if err != nil {
+		return 0, err
+	}
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if ok && token.Valid {
+		userId, err := strconv.Atoi(fmt.Sprintf("%v", claims["user_id"]))
+		if err != nil {
+			return 0, err
+		}
+		return userId, nil
+	}
+	return 0, err
 }
