@@ -3,7 +3,7 @@ package userusecase
 import (
 	"errors"
 
-	"github.com/sandronister/jwt-auth/internal/tools/tokenservice"
+	"github.com/sandronister/jwt-auth/internal/tools/middleware"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -18,7 +18,13 @@ func (u *User) Login(username, password string) (string, error) {
 		return "", errors.New("not authorized")
 	}
 
-	token, err := tokenservice.GenerateToken(user.ID)
+	token, err := middleware.GenerateToken(user.ID, struct {
+		Name string
+		Role string
+	}{
+		Name: user.Username,
+		Role: "Admin",
+	})
 
 	if err != nil {
 		return "", err

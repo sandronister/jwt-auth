@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sandronister/jwt-auth/internal/tools/tokenservice"
 )
 
 func JwtAuthMiddleware() gin.HandlerFunc {
@@ -17,7 +16,7 @@ func JwtAuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		err := tokenservice.TokenValid(c)
+		err := TokenValid(c)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 			c.Abort()
