@@ -1,7 +1,6 @@
 package userhandlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -9,15 +8,9 @@ import (
 
 func (h *Handler) Current(c *gin.Context) {
 
-	user_id, exists := c.Get("user_id")
-	fmt.Println(user_id)
+	id, _ := c.Get("user_id")
 
-	if exists == false {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "user_id not found"})
-		return
-	}
-
-	user, err := h.userUsecase.GetUserById(user_id.(int))
+	user, err := h.userUsecase.GetUserById(id.(int))
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

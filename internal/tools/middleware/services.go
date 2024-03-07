@@ -17,25 +17,37 @@ type SignedDetails struct {
 	jwt.StandardClaims
 }
 
-func GenerateToken(id int, data interface{}) (string, error) {
-
-	token_lifespan, err := strconv.Atoi(os.Getenv("TOKEN_HOUR_LIFESPAN"))
+func getEnvs() (*int, *string) {
+	TOKEN_HOUR_LIFESPAN, err := strconv.Atoi(os.Getenv("TOKEN_HOUR_LIFESPAN"))
 
 	if err != nil {
-		return "", err
+		panic("token lifespan not set")
 	}
+
+	JWT_SECRET := os.Getenv("JWT_SECRET")
+
+	if JWT_SECRET == "" {
+		panic("jwt secret not set")
+	}
+
+	return &TOKEN_HOUR_LIFESPAN, &JWT_SECRET
+}
+
+func GenerateToken(id int, data interface{}) (string, error) {
+
+	TOKEN_HOUR_LIFESPAN, JWT_SECRET := getEnvs()
 
 	claims := &SignedDetails{
 		Id:         id,
 		Authorized: true,
 		Data:       data,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Hour * time.Duration(token_lifespan)).Unix(),
+			ExpiresAt: time.Now().Add(time.Hour * time.Duration(*TOKEN_HOUR_LIFESPAN)).Unix(),
 		},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(os.Getenv("JWT_SECRET")))
+	return token.SignedString([]byte(*JWT_SECRET))
 
 }
 
@@ -51,7 +63,8 @@ func ExtractToken(c *gin.Context) string {
 func TokenValid(c *gin.Context) error {
 	tokenString := ExtractToken(c)
 	token, err := jwt.ParseWithClaims(tokenString, &SignedDetails{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(os.Getenv("JWT_SECRET")), nil
+		_, JWT_SECRET := getEnvs()
+		return []byte(*JWT_SECRET), nil
 	})
 
 	if err != nil {
